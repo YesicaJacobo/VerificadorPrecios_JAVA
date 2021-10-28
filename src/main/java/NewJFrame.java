@@ -38,6 +38,8 @@ public class NewJFrame extends javax.swing.JFrame {
     Color gris = new Color (224,224,224);
     int seg = 0;
     boolean entro = false;
+    boolean  cronometroActivo = true;
+    
     
     public NewJFrame() {
        
@@ -98,9 +100,7 @@ public class NewJFrame extends javax.swing.JFrame {
         //jLabel4.setLocation(this.getWidth()/2 - jLabel4.getWidth()/2 , jLabel3.getLocation().y + jLabel3.getHeight() + 10);
      
     }
-    
-
-    
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -252,6 +252,26 @@ public class NewJFrame extends javax.swing.JFrame {
                     inst_disp.setVisible(true);
                     
                     //tem_enc.run();
+                    tiempo t = new tiempo();
+                    //cronometroActivo = true;
+                    
+                    //t.cal();
+//                    if (t.terminado) {
+//                        c();
+//                    }
+
+                    //Thread.sleep(5000);
+                    //c();
+                    
+                     
+//                        try {
+//                            Thread.sleep(5000);
+//                        } catch (InterruptedException ex) {
+//                            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                        c();
+                        
+                    
                     
                 }else{
                     barra_logo.setVisible(false);
@@ -263,7 +283,9 @@ public class NewJFrame extends javax.swing.JFrame {
                     desc.setVisible(false);
                     
                     men_noen.setVisible(true);
-                    noencontrado.setVisible(true);   
+                    noencontrado.setVisible(true);  
+                    
+                    
                 }
             }catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Ha ocurrido un error"+e.toString());
@@ -274,6 +296,11 @@ public class NewJFrame extends javax.swing.JFrame {
         
         if (evt.getKeyCode()== 8) {
             codigo = "";        
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
             c();
         }
     }//GEN-LAST:event_formKeyPressed
@@ -308,25 +335,34 @@ public class NewJFrame extends javax.swing.JFrame {
         barcode_imgproduc.setVisible(true);
     }
     
-     Thread tem_enc = new Thread(){
-        @Override
-        public void run() {
-            //super.start(); //To change body of generated methods, choose Tools | Templates.
-            try {
-                for(int i= 0; i<9; i++){
-                    seg ++;
-                    if(seg == 8){
-                        c();
-                        tem_enc.suspend();
-                    }
-                    Thread.sleep(999);
-                }  
-            } catch (InterruptedException ex) {
-                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-     };
      
+     public void cronometro() {
+        Integer  segundos = 0, milesimas = 0;
+        //min es minutos, seg es segundos y mil es milesimas de segundo
+        String min = "", seg = "", mil = "";
+        try {
+            //Mientras cronometroActivo sea verdadero entonces seguira
+            //aumentando el tiempo
+            while (cronometroActivo) {
+                Thread.sleep(4);
+                //Incrementamos 4 milesimas de segundo
+                milesimas += 4;
+                //Cuando llega a 1000 osea 1 segundo aumenta 1 segundo
+                //y las milesimas de segundo de nuevo a 0
+                if (milesimas == 1000) {
+                    milesimas = 0;
+                    segundos += 1;
+                    if (segundos == 8) {
+                        //cronometroActivo = false;
+                        c();
+                    }
+                }
+            }
+        } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Ha ocurrido un error en cronometro: "+e.toString());
+        }
+
+    }
 
     /**
      * @param args the command line arguments
